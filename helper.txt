@@ -1,0 +1,69 @@
+case Position.FT:
+          switch (action.shot.result) {
+            case Result.BANK:
+              return {
+                ...state,
+                practice: {
+                  ...state.practice,
+                  ft: {
+                    ...state.practice.ft,
+                    bank: state.practice.ft.bank + 1,
+                  },
+                },
+              };
+            case Result.SCORE:
+              return {
+                ...state,
+                practice: {
+                  ...state.practice,
+                  ft: {
+                    ...state.practice.ft,
+                    score: state.practice.ft.score + 1,
+                  },
+                },
+              };
+            case Result.LEFT:
+              return {
+                ...state,
+                practice: {
+                  ...state.practice,
+                  ft: {
+                    ...state.practice.ft,
+                    left: state.practice.ft.left + 1,
+                  },
+                },
+              };
+            case Result.RIGHT:
+              return {
+                ...state,
+                practice: {
+                  ...state.practice,
+                  ft: {
+                    ...state.practice.ft,
+                    right: state.practice.ft.right + 1,
+                  },
+                },
+              };
+            case Result.LONG:
+              return {
+                ...state,
+                practice: {
+                  ...state.practice,
+                  ft: {
+                    ...state.practice.ft,
+                    long: state.practice.ft.long + 1,
+                  },
+                },
+              };
+            case Result.SHORT:
+              return {
+                ...state,
+                practice: {
+                  ...state.practice,
+                  ft: {
+                    ...state.practice.ft,
+                    short: state.practice.ft.short + 1,
+                  },
+                },
+              };
+          }

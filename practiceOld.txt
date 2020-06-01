@@ -1,0 +1,39 @@
+import CurPractice from '../../models/CurPractice';
+import Practice from '../../models/Practice';
+import ShotRegister from '../../models/shotRegister';
+import { ADD_SHOT } from '../actions/practice';
+import { Position, Result, Points } from '../../constants/ShotParams';
+import Shot from '../../models/Shot';
+
+const initialState = {
+  practice: new Practice(
+    Date.now(),
+    Date.now(),
+    new ShotRegister(0, 0, 0, 0, 0, 0),
+    new ShotRegister(0, 0, 0, 0, 0, 0),
+    new ShotRegister(0, 0, 0, 0, 0, 0),
+    new ShotRegister(0, 0, 0, 0, 0, 0),
+    new ShotRegister(0, 0, 0, 0, 0, 0),
+    new ShotRegister(0, 0, 0, 0, 0, 0),
+    new ShotRegister(0, 0, 0, 0, 0, 0),
+    new ShotRegister(0, 0, 0, 0, 0, 0),
+    new ShotRegister(0, 0, 0, 0, 0, 0),
+    new ShotRegister(0, 0, 0, 0, 0, 0),
+    new ShotRegister(0, 0, 0, 0, 0, 0)
+  ),
+  shots: [],
+};
+
+export default (state = initialState, action) => {
+  // console.log('State shots: ' + JSON.stringify(state.shots));
+  // console.log('Action: ' + JSON.stringify(action));
+  console.log('Practice: ' + JSON.stringify(state.practice));
+  // console.log(
+  //   'Close range: ' + JSON.stringify(state.curPractice.closeRange) + '\n'
+  // );
+  switch (action.type) {
+    case ADD_SHOT:
+    default:
+      return state;
+  }
+};
