@@ -10,19 +10,20 @@ import {
   Cols,
   Cell,
 } from 'react-native-table-component';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
 import { PositionsList } from '../constants/Position';
-import { Result, Position, Points } from '../constants/ShotParams';
+import { Result } from '../constants/ShotParams';
 import CustomButton from '../components/CustomButton';
 import * as practiceActions from '../store/actions/practice';
-import { getTotalFor, getCountFor } from '../helpers/HelperFuntions';
 import Shot from '../models/Shot';
+import HeaderButton from '../components/HeaderButton';
 
 const PracticeScreen = (props) => {
-  const backgroundImg = require('../assets/court4.jpg');
+  const backgroundImg = require('../assets/court.jpg');
   const dispatch = useDispatch();
 
-  const practice = useSelector((state) => state.practice.practice);
+  const curPractice = useSelector((state) => state.practice.practice);
   const [selectedPosition, setSelectedPosition] = useState(
     PositionsList[0].value
   );
@@ -32,10 +33,9 @@ const PracticeScreen = (props) => {
   // for (const item in PositionsList) {
   //   tableHead.push(PositionsList[item].label);
   // }
-  const [tableData, setTableData] = useState([[0, 0, 0]]);
+  const [tableData, setTableData] = useState([[0 + '%', 0, 0]]);
 
   const changePositionHandler = (item) => {
-    console.log('Postion: ' + item);
     setSelectedPosition(item);
   };
 
@@ -49,32 +49,24 @@ const PracticeScreen = (props) => {
   );
 
   useEffect(() => {
-    let miss = 0;
-    let totalScore = 0;
-    let success = 0;
-    for (var key in practice) {
-      if (practice.hasOwnProperty(key)) {
-        miss += practice[key].long;
-        miss += practice[key].short;
-        miss += practice[key].left;
-        miss += practice[key].right;
+    setTableData([[curPractice.successRate + '%', curPractice.totalScore, curPractice.totalMisses]]);
+  }, [curPractice]);
+
+  const saveHandler = useCallback(
+    async (practice) => {
+      try {
+        await dispatch(practiceActions.addPractice(practice));
+      } catch (err) {
+        console.log(err);
       }
-    }
+    },
+    [dispatch]
+  );
 
-    for (var key in practice) {
-      if (practice.hasOwnProperty(key)) {
-        totalScore += practice[key].score;
-      }
-    }
-
-    if (miss !== 0 || totalScore !== 0) {
-      success += Math.round(((totalScore / (miss + totalScore)) * 100) * 100) / 100;
-    }
-
-    setTableData([[success + '%', totalScore, miss]]);
-    // console.log('totalBank: ' + totalBank);
-    // console.log(practice.cr.bank);
-  }, [shots]);
+  useEffect(() => {
+    props.navigation.setParams({ practice: curPractice });
+    props.navigation.setParams({ save: saveHandler });
+  }, [curPractice]);
 
   return (
     <ImageBackground source={backgroundImg} style={styles.img}>
@@ -149,6 +141,24 @@ const PracticeScreen = (props) => {
       </View>
     </ImageBackground>
   );
+};
+
+PracticeScreen.navigationOptions = (navData) => {
+  const saveFn = navData.navigation.getParam('save');
+  const practiceToForward = navData.navigation.getParam('practice');
+  return {
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title='Add Place'
+          iconName={Platform.OS === 'android' ? 'md-save' : 'ios-save'}
+          onPress={() => {
+            saveFn(practiceToForward);
+          }}
+        />
+      </HeaderButtons>
+    ),
+  };
 };
 
 const styles = StyleSheet.create({
